@@ -84,19 +84,13 @@ function NumResults({ movies }) {
     );
 }
 
-const KEY = "1b4f5c8d";
-
 function Main({ children }) {
     return <main className="main">{children}</main>;
 }
 
 export default function App() {
-    const [movies, setMovies] = useState([]);
-    const [watched, setWatched] = useState([]);
-
-    fetch(`http://www.omdbapi.com/?apikey=${KEY}&s=interstellar`)
-        .then((res) => res.json())
-        .then((data) => console.log(data.Search));
+    const [movies, setMovies] = useState(tempMovieData);
+    const [watched, setWatched] = useState(tempWatchedData);
 
     return (
         <>
