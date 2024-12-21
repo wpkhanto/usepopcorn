@@ -91,7 +91,7 @@ function Main({ children }) {
 }
 
 export default function App() {
-    const [query, setQuery] = useState('inception');
+    const [query, setQuery] = useState('');
     const [movies, setMovies] = useState([]);
     const [watched, setWatched] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
@@ -141,7 +141,7 @@ export default function App() {
                     setMovies(data.Search);
                     setError('');
                 } catch (err) {
-                    console.error(err.message);
+                    console.log(err.message);
                     if (err.name !== 'AbortError') {
                         setError(err.message);
                     }
@@ -156,6 +156,7 @@ export default function App() {
                 return;
             }
 
+            handleCloseMovie();
             fetchMovies();
 
             return function () {
@@ -323,6 +324,20 @@ function MovieDetails({ selectedId, onCloseMovie, onAddWatched, watched }) {
         onCloseMovie();
     }
 
+    useEffect(function () {
+        const callback = function (e) {
+            if (e.code === 'Escape') {
+                onCloseMovie();
+                console.log('CLOSING');
+            }
+        };
+        document.addEventListener('keydown', callback);
+
+        return function () {
+            document.removeEventListener('keydown', callback);
+        };
+    }, [onCloseMovie]);
+
     useEffect(
         function () {
             async function getMovieDetails() {
@@ -346,7 +361,7 @@ function MovieDetails({ selectedId, onCloseMovie, onAddWatched, watched }) {
 
             return function () {
                 document.title = 'usePopcorn';
-                console.log(`Clean up effect for movie ${title}`);
+                // console.log(`Clean up effect for movie ${title}`);
             };
         },
         [title]
